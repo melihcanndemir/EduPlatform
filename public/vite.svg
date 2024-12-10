@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <path d="M8 6 L16 2 L24 6 L24 14 L16 18 L8 14 Z" fill="#2563EB" />
+  <path d="M8 14 L16 18 L24 14 L24 22 L16 26 L8 22 Z" fill="#3B82F6" opacity="0.9" />
+  
+  <!-- Mini plus işareti -->
+  <path d="M14 12 L18 12 M16 10 L16 14" stroke="white" stroke-width="1.5" stroke-linecap="round" />
+</svg>

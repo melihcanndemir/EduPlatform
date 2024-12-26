@@ -1,14 +1,27 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, Users, Star, Brain, Atom, Database } from "lucide-react";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
-import HeroSection from "./HeroSection";
+import {
+  BookOpen,
+  Users,
+  Star,
+  Brain,
+  Atom,
+  Database,
+  Lock,
+} from "lucide-react";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import HeroSection from "../components/HeroSection";
+import authService from "../services/authService";
 
 const EducationPlatform = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = React.useState("tümü");
   const [searchTerm, setSearchTerm] = React.useState("");
+
+  const [currentUser, setCurrentUser] = React.useState(() =>
+    authService.checkAuth()
+  );
 
   const categories = [
     { id: "tümü", label: "Tümü" },
@@ -48,7 +61,7 @@ const EducationPlatform = () => {
     {
       id: 2,
       title: "React.js ile Modern Web Uygulamaları",
-      instructor: "Mustafa Duyarer",
+      instructor: "Arınç Solina",
       level: "Orta",
       duration: "12 saat",
       students: 856,
@@ -60,7 +73,7 @@ const EducationPlatform = () => {
     {
       id: 3,
       title: "Python Programlama",
-      instructor: "Yasemin Eski",
+      instructor: "Liva Ardeniz",
       level: "Başlangıç",
       duration: "10 saat",
       students: 2156,
@@ -248,6 +261,15 @@ const EducationPlatform = () => {
 
   const filteredCourses = getFilteredCourses();
 
+  // Kullanıcının bu kursu satın alıp almadığını kontrol eden fonksiyon
+  const isCoursePurchased = (courseId) => {
+    if (!currentUser) return false;
+    return (
+      currentUser.purchasedCourses &&
+      currentUser.purchasedCourses.includes(courseId)
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-500">
       <Navbar onSearch={handleSearch} />
@@ -277,6 +299,7 @@ const EducationPlatform = () => {
             const iconToRender = categoryIcons[course.category] || (
               <BookOpen className="w-16 h-16 text-white opacity-80" />
             );
+            const purchased = isCoursePurchased(course.id);
             return (
               <div
                 key={course.id}
@@ -303,6 +326,9 @@ const EducationPlatform = () => {
                     <span className="flex items-center text-yellow-500">
                       <Star size={16} className="mr-1" />
                       {course.rating}
+                      {!purchased && (
+                        <Lock size={16} className="ml-2 text-gray-500" />
+                      )}
                     </span>
                   </div>
 

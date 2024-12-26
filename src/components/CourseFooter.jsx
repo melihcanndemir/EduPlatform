@@ -4,7 +4,6 @@ import {
   Clock,
   Users,
   BookOpen,
-  GraduationCap,
   MessageCircle,
   Share2,
   ExternalLink,
@@ -14,11 +13,11 @@ const CourseFooter = ({ course }) => {
   if (!course) return null;
 
   return (
-    <footer className="bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900">
+    <footer className="bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 dark:from-gray-900 dark:via-blue-900 dark:to-gray-900">
       <div className="max-w-7xl mx-auto px-4 py-12">
-        {/* Main Footer Content */}
+        {/* Ana Footer İçeriği - 3 Kolon */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
-          {/* Course Overview */}
+          {/* Kurs Genel Bakış */}
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-white flex items-center gap-2">
               <BookOpen className="h-5 w-5" />
@@ -26,7 +25,7 @@ const CourseFooter = ({ course }) => {
             </h3>
             <ul className="space-y-2">
               <li className="flex items-center text-slate-300 gap-2">
-                <GraduationCap className="h-4 w-4 text-blue-400" />
+                <Brain className="h-4 w-4 text-blue-400" />
                 <span>Eğitmen: {course.instructor}</span>
               </li>
               <li className="flex items-center text-slate-300 gap-2">
@@ -47,7 +46,7 @@ const CourseFooter = ({ course }) => {
             </ul>
           </div>
 
-          {/* Course Topics */}
+          {/* Kurs Konuları */}
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-white flex items-center gap-2">
               <Brain className="h-5 w-5" />
@@ -74,7 +73,7 @@ const CourseFooter = ({ course }) => {
             </ul>
           </div>
 
-          {/* Quick Actions */}
+          {/* Hızlı Erişim */}
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-white flex items-center gap-2">
               <MessageCircle className="h-5 w-5" />
@@ -93,7 +92,7 @@ const CourseFooter = ({ course }) => {
           </div>
         </div>
 
-        {/* Footer Bottom */}
+        {/* Alt Kısım - Copyright ve Linkler */}
         <div className="pt-8 mt-8 border-t border-white/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-slate-400">

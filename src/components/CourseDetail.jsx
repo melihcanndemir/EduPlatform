@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import authService from "../services/authService";
 import courseService from "../services/courseService";
+import CourseCheckout from "./CourseCheckout";
 import {
   ArrowLeft,
   BookOpen,
@@ -58,9 +59,6 @@ const QuantumHero = ({ course }) => {
         </div>
       </div>
 
-      {/* Consciousness Matrix Layer */}
-      <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 via-transparent to-purple-900/40" />
-
       {/* Quantum Interference Pattern */}
       <div className="absolute inset-0">
         {[...Array(3)].map((_, i) => (
@@ -81,47 +79,13 @@ const QuantumHero = ({ course }) => {
         ))}
       </div>
 
-      {/* Cognitive Resonance Lines */}
-      <div className="absolute inset-0">
-        {[...Array(5)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent"
-            style={{
-              top: `${20 + i * 15}%`,
-              transform: `translateX(${
-                Math.sin(scrollPosition * 0.003 + i) * 50
-              }px)`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Luminous Particles */}
-      <div className="absolute inset-0">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-white rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              opacity: 0.1 + Math.sin(scrollPosition * 0.01 + i) * 0.1,
-              transform: `scale(${
-                1 + Math.sin(scrollPosition * 0.002 + i) * 0.5
-              })`,
-            }}
-          />
-        ))}
-      </div>
-
       {/* Content Container */}
       <div className="relative h-full flex items-center justify-center">
-        <div className="text-center z-10">
+        <div className="text-center z-10 px-4">
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
             {course?.title}
           </h1>
-          <p className="text-blue-100 max-w-2xl mx-auto px-4">
+          <p className="text-blue-100 max-w-2xl mx-auto">
             {course?.description}
           </p>
         </div>
@@ -130,10 +94,97 @@ const QuantumHero = ({ course }) => {
   );
 };
 
+// Course Information Section
+const CourseInfo = ({ course }) => {
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+        Kurs Bilgileri
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+            Eğitmen
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400">
+            {course?.instructor}
+          </p>
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+            Fiyat
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400">{course?.price} TL</p>
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+            Toplam Süre
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400">
+            {course?.topics.reduce(
+              (acc, topic) => acc + parseInt(topic.duration),
+              0
+            )}{" "}
+            saat
+          </p>
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+            Konular
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400">
+            {course?.topics.length} ana başlık
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Course Content Section
+const CourseContent = ({ topics }) => {
+  return (
+    <div className="space-y-6">
+      {topics?.map((topic, index) => (
+        <div
+          key={topic.id}
+          className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transition-all duration-300 hover:shadow-xl"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+              {index + 1}. {topic.title}
+            </h3>
+            <span className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+              <Clock size={16} className="mr-1" />
+              {topic.duration}
+            </span>
+          </div>
+          <div className="space-y-3">
+            {topic.subtopics.map((subtopic, idx) => (
+              <div
+                key={idx}
+                className="flex items-center text-gray-600 dark:text-gray-300"
+              >
+                <CheckCircle
+                  size={16}
+                  className="mr-2 text-green-500 dark:text-green-400 flex-shrink-0"
+                />
+                <span>{subtopic}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// Main Course Detail Component
 const CourseDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [course, setCourse] = React.useState(null);
+  const [showCheckout, setShowCheckout] = useState(false);
 
   useEffect(() => {
     const user = authService.checkAuth();
@@ -157,55 +208,58 @@ const CourseDetail = () => {
   if (!course) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <Navbar />
 
-      {/* Yeni Quantum Hero Component */}
+      {/* Hero Section */}
       <QuantumHero course={course} />
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Back Button */}
         <button
           onClick={() => navigate("/")}
-          className="flex items-center text-gray-600 hover:text-blue-600 mb-6"
+          className="flex items-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 mb-8 transition-colors duration-300"
         >
           <ArrowLeft className="mr-2" size={20} />
           Kurslara Dön
         </button>
 
-        <div className="flex items-center space-x-6 mb-8">
-          <span className="flex items-center text-sm text-gray-500">
-            <BookOpen size={16} className="mr-1" />
-            Eğitmen: {course.instructor}
-          </span>
-          <span className="flex items-center text-sm text-gray-500">
-            <CreditCard size={16} className="mr-1" />
-            Fiyat: {course.price} TL
-          </span>
+        {/* Course Information Section */}
+        <CourseInfo course={course} />
+
+        {/* Course Content Section */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+            Kurs İçeriği
+          </h2>
+          <CourseContent topics={course.topics} />
         </div>
 
-        <div className="space-y-6">
-          {course.topics.map((topic) => (
-            <div key={topic.id} className="border rounded-lg p-4">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-semibold text-gray-900">
-                  {topic.title}
-                </h3>
-                <span className="flex items-center text-sm text-gray-500">
-                  <Clock size={16} className="mr-1" />
-                  {topic.duration}
-                </span>
-              </div>
-              <div className="space-y-2">
-                {topic.subtopics.map((subtopic, index) => (
-                  <div key={index} className="flex items-center text-gray-600">
-                    <CheckCircle size={16} className="mr-2 text-green-500" />
-                    {subtopic}
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+        {/* Call to Action */}
+        <div className="mt-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-8 text-center">
+          <h3 className="text-2xl font-bold text-white mb-4">
+            Hemen Öğrenmeye Başlayın
+          </h3>
+          <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
+            Bu kursu satın alarak bilincin ve teknolojinin kesişimindeki
+            yolculuğunuza başlayın.
+          </p>
+          <button
+            onClick={() => setShowCheckout(true)}
+            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors"
+          >
+            Kursu Satın Al - {course.price} TL
+          </button>
         </div>
+
+        {/* Add the Checkout Dialog */}
+        {showCheckout && (
+          <CourseCheckout
+            course={course}
+            onClose={() => setShowCheckout(false)}
+          />
+        )}
       </div>
       <CourseFooter course={course} />
     </div>
